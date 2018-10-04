@@ -65,7 +65,7 @@ async function execute(queryOption: QueryOption, options?: { csvQuotations?: boo
     rowsCounter += rows.length;
     option = _option;
     result = _result;
-    if (fields.length === 0 && result.schema.fields) {
+    if (fields.length === 0 && result.schema && result.schema.fields) {
       fields = (result.schema.fields as Field[]).filter(f => !(f instanceof Array) && f.name && f.type);
     }
     if (isFirst) {
