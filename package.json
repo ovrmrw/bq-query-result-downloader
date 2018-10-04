@@ -1,0 +1,56 @@
+{
+  "name": "bq-query-result-downloader",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf build",
+    "tsc": "tsc --build tsconfig.build.json",
+    "tsc:w": "tsc --build tsconfig.build.json --watch",
+    "build": "npm run clean && npm run tsc",
+    "build:w": "npm run clean && npm run tsc:w",
+    "start": "npm run ts -- src/index.ts",
+    "watch": "npm run nd -- src/index.ts",
+    "ts": "ts-node",
+    "nd": "nodemon --exec ts-node",
+    "bs": "npm run build && node",
+    "test": "jest",
+    "test:w": "jest --watch",
+    "format": "prettier --write {{src,__test__}/**/,}*.{json,js,ts}"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "testEnvironment": "node"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^23.3.1",
+    "@types/lodash": "^4.14.77",
+    "@types/node": "^8.0.33",
+    "jest": "^23.4.2",
+    "nodemon": "^1.14.12",
+    "prettier": "^1.14.0",
+    "ts-jest": "^23.0.1",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.8.0",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^1.3.0",
+    "lodash": "^4.17.4",
+    "rxjs": "^6.3.3"
+  }
+}
