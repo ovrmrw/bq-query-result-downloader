@@ -16,7 +16,7 @@ interface RowObject {
 export class FileWriter {
   private jsonWriteStream: WriteStream;
   private csvWriteStream: WriteStream;
-  private subject$: Subject<RowObject>;
+  private subject$: Subject<RowObject> = new Subject();
 
   constructor() {
     const now = Math.floor(Date.now() / 1000);
@@ -24,10 +24,27 @@ export class FileWriter {
     const csvFilepath = path.join(RESULTS_DIR, FILENAME + `_${now}.csv`);
     this.jsonWriteStream = fs.createWriteStream(jsonFilepath);
     this.csvWriteStream = fs.createWriteStream(csvFilepath);
-    this.subject$ = new Subject();
+    this.createFileWriteStreams();
+  }
+
+  writeRow(row: Row, fields: Field[], csvQuotations?: boolean): void {
+    this.subject$.next({ row, fields, csvQuotations });
+  }
+
+  writeCsvHeader(fields: Field[], csvQuotations?: boolean): void {
+    console.log('fields:', fields);
+    this.csvWriteStream.write(fields.map(f => (csvQuotations ? `"${f.name}"` : f.name)).join(',') + '\n');
+  }
+
+  finish(): void {
+    this.subject$.complete();
+  }
+
+  private createFileWriteStreams(): void {
     let jsonRowCounter = 0;
     let csvRowCounter = 0;
-    const jsonWriter$ = this.subject$
+
+    this.subject$
       .pipe(
         concatMap(({ row, fields }) => {
           if (!this.jsonWriteStream.write(createJsonRow(row, fields))) {
@@ -46,8 +63,8 @@ export class FileWriter {
             JSON.stringify(
               {
                 message: 'JSONファイルの生成が完了しました',
-                filepath: jsonFilepath,
-                rowCounter: jsonRowCounter
+                filepath: this.jsonWriteStream.path,
+                rows: jsonRowCounter
               },
               null,
               2
@@ -55,7 +72,8 @@ export class FileWriter {
           );
         }
       });
-    const csvWriter$ = this.subject$
+
+    this.subject$
       .pipe(
         concatMap(({ row, fields, csvQuotations }) => {
           if (!this.csvWriteStream.write(createCsvRow(row, fields, csvQuotations))) {
@@ -72,25 +90,16 @@ export class FileWriter {
           this.csvWriteStream.end();
           console.log(
             JSON.stringify(
-              { message: 'CSVファイルの生成が完了しました', filepath: csvFilepath, rowCounter: csvRowCounter },
+              {
+                message: 'CSVファイルの生成が完了しました',
+                filepath: this.csvWriteStream.path,
+                rows: csvRowCounter
+              },
               null,
               2
             )
           );
         }
       });
-  }
-
-  writeRow(row: Row, fields: Field[], csvQuotations?: boolean): void {
-    this.subject$.next({ row, fields, csvQuotations });
-  }
-
-  writeCsvHeader(fields: Field[], csvQuotations?: boolean): void {
-    console.log('fields:', fields);
-    this.csvWriteStream.write(fields.map(f => (csvQuotations ? `"${f.name}"` : f.name)).join(',') + '\n');
-  }
-
-  finish(): void {
-    this.subject$.complete();
   }
 }
