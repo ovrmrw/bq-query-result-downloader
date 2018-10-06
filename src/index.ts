@@ -61,7 +61,7 @@ async function execute(queryOption: QueryOption, options?: { csvQuotations?: boo
   let result: Result;
   const fileWriter = new FileWriter();
   do {
-    const [rows, _option, _result] = (await job.getQueryResults(option)) as [Row, ResultsOption, Result];
+    const [rows, _option, _result] = (await job.getQueryResults(option)) as [Row[], ResultsOption, Result];
     rowsCounter += rows.length;
     option = _option;
     result = _result;

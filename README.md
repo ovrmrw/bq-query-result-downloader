@@ -38,10 +38,10 @@ $ yarn start hogehoge
 {
   "bigQuery": {
     "location": "US",
-    "maxResults": 5000
+    "maxResults": 10000
   },
   "dollarYenRate": 113
 }
 ```
 
-`maxResults` ... 一度にダウンロードする行数。`5000`に設定した場合、合計10,000行なら2回に分けてダウンロードする。
+`maxResults` ... 一度にダウンロードする行数。`10000`に設定した場合、合計20,000行なら2回に分けてダウンロードする。
