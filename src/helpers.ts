@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { isObject } from 'lodash';
 import { Field, QueryObject, Row } from './types';
 import { QUERY_DIR, DOLLAR_YEN_RATE } from './const';
 
@@ -40,13 +39,15 @@ export function billedAsYen(bytesProcessed: number): number {
 }
 
 function flattenRow(row: Row, fields: Field[]): Row {
-  Object.entries(row).forEach(([key, valueOrObject]) => {
-    if (isObject(valueOrObject)) {
+  return Object.entries(row).reduce((p, [key, valueOrObject]) => {
+    if (valueOrObject && typeof valueOrObject === 'object' && Object.keys(valueOrObject).length > 0) {
       const field = fields.find(f => f.name === key);
       if (field && field.type === 'TIMESTAMP') {
-        row[key] = valueOrObject.value;
+        p[key] = valueOrObject.value;
       }
+    } else {
+      p[key] = valueOrObject;
     }
-  });
-  return row;
+    return p;
+  }, {});
 }
