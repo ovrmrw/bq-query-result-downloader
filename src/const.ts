@@ -16,6 +16,6 @@ export const QUERY_DIR = path.join(process.cwd(), 'query');
 export const RESULTS_DIR = path.join(process.cwd(), 'results');
 
 export const BQ_LOCATION = config.bigQuery && config.bigQuery.location ? config.bigQuery.location : 'US';
-export const MAX_RESULTS = config.bigQuery && config.bigQuery.maxResults ? config.bigQuery.maxResults : 10000;
+export const MAX_RESULTS = config.bigQuery && config.bigQuery.maxResults ? config.bigQuery.maxResults : 100000;
 
-export const DOLLAR_YEN_RATE = config.dollarYenRate ? config.dollarYenRate : 113;
+export const DOLLAR_YEN_RATE = config.dollarYenRate ? config.dollarYenRate : 108;
