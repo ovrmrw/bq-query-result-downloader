@@ -42,7 +42,7 @@ function flattenRow(row: Row, fields: Field[]): Row {
   return Object.entries(row).reduce((p, [key, valueOrObject]) => {
     if (valueOrObject && typeof valueOrObject === 'object' && Object.keys(valueOrObject).length > 0) {
       const field = fields.find(f => f.name === key);
-      if (field && field.type === 'TIMESTAMP') {
+      if (field && (field.type === 'TIMESTAMP' || field.type === 'DATETIME')) {
         p[key] = valueOrObject.value;
       }
     } else {

@@ -1,6 +1,6 @@
 export interface Field {
   name: string;
-  type: 'STRING' | 'INT64' | 'TIMESTAMP';
+  type: 'STRING' | 'INT64' | 'TIMESTAMP' | 'DATETIME';
 }
 
 export interface QueryObject {
